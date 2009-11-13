@@ -43,40 +43,40 @@ user_info_dict = dict(base_generic_dict,
 
 # General snippets views.
 urlpatterns = patterns('',
-                       (r'^(?P<snippet_id>\d+)/$', snippets.snippet_detail),
-                       (r'^(?P<snippet_id>\d+)/download/$', snippets.download),
-                       (r'^add/$', snippets.add_snippet),
-                       (r'^edit/(?P<snippet_id>\d+)/$', snippets.edit_snippet),
-                       (r'^languages/(?P<slug>[\w-]+)$', snippets.snippets_by_language),
-                       (r'^rate/(?P<snippet_id>\d+)/$', snippets.rate_snippet),
-                       (r'^tags/(?P<slug>[\w-]+)/$', snippets.snippets_by_tag),
-                       (r'^users/(?P<username>[^/]+)/$', snippets.snippets_by_author),
+                       url(r'^(?P<snippet_id>\d+)/$', snippets.snippet_detail, name='snippet_detail'),
+                       url(r'^(?P<snippet_id>\d+)/download/$', snippets.download, name='snippet_download'),
+                       url(r'^add/$', snippets.add_snippet, name='add_snippet'),
+                       url(r'^edit/(?P<snippet_id>\d+)/$', snippets.edit_snippet, name='edit_snippet'),
+                       url(r'^languages/(?P<slug>[\w-]+)$', snippets.snippets_by_language, name='snippets_by_language'),
+                       url(r'^rate/(?P<snippet_id>\d+)/$', snippets.rate_snippet, name='rate_snippet'),
+                       url(r'^tags/(?P<slug>[\w-]+)/$', snippets.snippets_by_tag, name='snippets_by_tag'),
+                       url(r'^users/(?P<username>[^/]+)/$', snippets.snippets_by_author, name='snippets_by_author'),
                        )
 
 # Views that work with bookmarks.
 urlpatterns += patterns('',
-                        (r'^bookmarks/$', bookmarks.bookmarks),
-                        (r'^bookmarks/add/(?P<snippet_id>\d+)/$', bookmarks.add_bookmark),
-                        (r'^bookmarks/author/(?P<author_username>[\w-]+)/$', bookmarks.bookmarks_by_author),
-                        (r'^bookmarks/delete/(?P<bookmark_id>\d+)/$', bookmarks.delete_bookmark),
-                        (r'^bookmarks/language/(?P<language_slug>[\w-]+)/$', bookmarks.bookmarks_by_language),
-                        (r'^bookmarks/tag/(?P<tag_slug>[\w-]+)/$', bookmarks.bookmarks_by_tag),
+                        url(r'^bookmarks/$', bookmarks.bookmarks, name='bookmarks'),
+                        url(r'^bookmarks/add/(?P<snippet_id>\d+)/$', bookmarks.add_bookmark, name='add_bookmark'),
+                        url(r'^bookmarks/author/(?P<author_username>[\w-]+)/$', bookmarks.bookmarks_by_author, name='bookmarks_by_author'),
+                        url(r'^bookmarks/delete/(?P<bookmark_id>\d+)/$', bookmarks.delete_bookmark, name='delete_bookmark'),
+                        url(r'^bookmarks/language/(?P<language_slug>[\w-]+)/$', bookmarks.bookmarks_by_language, name='bookmarks_by_language'),
+                        url(r'^bookmarks/tag/(?P<tag_slug>[\w-]+)/$', bookmarks.bookmarks_by_tag, name='bookmarks_by_tag'),
                         )
 
 # Views for popular items.
 urlpatterns += patterns('',
                         # Need a better URL for this one. (r'^popular/authors/$', popular.top_authors),
-                        (r'^popular/bookmarks/$', popular.most_bookmarked),
-                        (r'^popular/languages/$', popular.top_languages),
-                        (r'^popular/top-rated/$', popular.top_rated),
-                        (r'^popular/tags/$', popular.top_tags),
+                        url(r'^popular/bookmarks/$', popular.most_bookmarked, name='most_bookmarked'),
+                        url(r'^popular/languages/$', popular.top_languages, name='top_languages'),
+                        url(r'^popular/top-rated/$', popular.top_rated, name='top_rated'),
+                        url(r'^popular/tags/$', popular.top_tags, name='top_tags'),
                         )
 
 # Generic views.
 urlpatterns += patterns('',
-                        (r'^$', object_list, snippet_info_dict),
-                        (r'^feeds/(?P<url>.*)/$', feed, feed_dict),
-                        (r'^languages/$', object_list, language_info_dict),
-                        (r'^tags/$', object_list, tag_info_dict),
-                        (r'^users/$', object_list, user_info_dict),
+                        url(r'^$', object_list, snippet_info_dict, name='index'),
+                        url(r'^feeds/(?P<url>.*)/$', feed, feed_dict, name='feed'),
+                        url(r'^languages/$', object_list, language_info_dict, name='languages'),
+                        url(r'^tags/$', object_list, tag_info_dict, name='tags'),
+                        url(r'^users/$', object_list, user_info_dict, name='users'),
                         )
