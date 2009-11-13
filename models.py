@@ -11,6 +11,7 @@ import datetime, re
 from django.db import connection, models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 import managers
 from markdown import markdown
 from pygments import highlight, lexers, formatters
@@ -52,10 +53,9 @@ class Language(models.Model):
         super(Language, self).save()
     
     def get_absolute_url(self):
-        return ('cab.views.snippets.snippets_by_language', (), { 'slug': self.slug })
-    get_absolute_url = models.permalink(get_absolute_url)
+        return reverse('cab:snippets_by_language', kwargs={'slug': self.slug})
     
-    def __str__(self):
+    def __unicode__(self):
         return self.name
     
     def get_lexer(self):
@@ -83,10 +83,9 @@ class Tag(models.Model):
         super(Tag, self).save()
     
     def get_absolute_url(self):
-        return ('cab.views.snippets.snippets_by_tag', (), { 'slug': self.slug })
-    get_absolute_url = models.permalink(get_absolute_url)
+        return reverse('cab:snippets_by_tag', kwargs={'slug':self.slug})
     
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -161,12 +160,11 @@ class Snippet(models.Model):
                 tag, created = Tag.objects.get_or_create(name=tag_name)
                 self.tags.add(tag)
     
-    def __str__(self):
+    def __unicode__(self):
         return self.title
     
     def get_absolute_url(self):
-        return ('cab.views.snippets.snippet_detail', (), { 'snippet_id': str(self.id) })
-    get_absolute_url = models.permalink(get_absolute_url)
+        return reverse('cab:snippet_detail', kwargs={'snippet_id': self.id})
     
     def highlight(self):
         """
@@ -196,7 +194,7 @@ class Rating(models.Model):
             self.date = datetime.datetime.now()
         super(Rating, self).save()
     
-    def __str__(self):
+    def __unicode__(self):
         return "%s rating '%s'" % (self.user.username, self.snippet.title)
 
 
@@ -219,5 +217,5 @@ class Bookmark(models.Model):
             self.date = datetime.datetime.now()
         super(Bookmark, self).save()
     
-    def __str__(self):
+    def __unicode__(self):
         return "%s bookmarked by %s" % (self.snippet.title, self.user.username)
