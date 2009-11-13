@@ -46,14 +46,6 @@ class Language(models.Model):
     class Meta:
         ordering = ('name',)
     
-    class Admin:
-        fields = (
-            ('Language information', {
-            'fields': ('name', 'language_code')}),
-            ('File type information', {
-            'fields': ('file_extension', 'mime_type')}),
-            )
-    
     def save(self):
         if not self.id:
             self.slug = slugify(self.name)
@@ -84,9 +76,6 @@ class Tag(models.Model):
     
     class Meta:
         ordering = ('name',)
-    
-    class Admin:
-        pass
     
     def save(self):
         if not self.id:
@@ -143,14 +132,6 @@ class Snippet(models.Model):
     
     class Meta:
         ordering = ('-pub_date',)
-    
-    class Admin:
-        fields = (
-            ('Metadata', {
-            'fields': ('title', 'language', 'author', 'tag_list', 'original')}),
-            ('None', {
-             'fields': ('description', 'code')}),
-            )
     
     def save(self):
         if not self.id:
@@ -210,9 +191,6 @@ class Rating(models.Model):
     
     objects = managers.RatingsManager()
     
-    class Admin:
-        pass
-    
     def save(self):
         if not self.id:
             self.date = datetime.datetime.now()
@@ -235,9 +213,6 @@ class Bookmark(models.Model):
     
     class Meta:
         ordering = ('date',)
-    
-    class Admin:
-        pass
     
     def save(self):
         if not self.id:
