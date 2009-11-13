@@ -34,13 +34,13 @@ class Language(models.Model):
     of the download appropriately.
     
     """
-    name = models.CharField(maxlength=50)
+    name = models.CharField(max_length=50)
     slug = models.SlugField(editable=False)
-    language_code = models.CharField(maxlength=50,
+    language_code = models.CharField(max_length=50,
                                      help_text="This should be an alias of a Pygments lexer which can handle this language.")
-    file_extension = models.CharField(maxlength=10,
+    file_extension = models.CharField(max_length=10,
                                       help_text="The file extension to use when downloading Snippets in this Language; leave out the dot.")
-    mime_type = models.CharField(maxlength=100,
+    mime_type = models.CharField(max_length=100,
                                  help_text="The HTTP Content-Type to use when downloading Snippets in this Language.")
     
     class Meta:
@@ -79,7 +79,7 @@ class Tag(models.Model):
     A descriptive tag to be applied to a Snippet.
     
     """
-    name = models.CharField(maxlength=50, unique=True)
+    name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(editable=False)
     
     class Meta:
@@ -122,7 +122,7 @@ class Snippet(models.Model):
     
     """
     
-    title = models.CharField(maxlength=250)
+    title = models.CharField(max_length=250)
     language = models.ForeignKey(Language)
     description = models.TextField(help_text="Accepts Markdown syntax.")
     description_html = models.TextField(editable=False)
@@ -133,7 +133,7 @@ class Snippet(models.Model):
     updated_date = models.DateTimeField(editable=False)
     
     author = models.ForeignKey(User)
-    tag_list = models.CharField(maxlength=250,
+    tag_list = models.CharField(max_length=250,
                                 help_text="Separate tags with spaces. Maximum 250 characters.")
     tags = models.ManyToManyField(Tag, editable=False)
     original = models.ForeignKey('self', null=True, blank=True,

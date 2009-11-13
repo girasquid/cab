@@ -3,7 +3,7 @@ Forms for adding and editing Snippets.
 
 """
 
-from django import newforms as forms
+from django import forms
 from models import Language
 
 # I put this on all required fields, because it's easier to pick up
