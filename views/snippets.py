@@ -14,6 +14,7 @@ from cab import forms
 from cab.models import Language, Rating, Snippet, Tag
 from bookmarks import base_generic_dict
 
+@login_required
 def add_snippet(request):
     """
     Allows a user to add a Snippet to the database.
@@ -31,12 +32,8 @@ def add_snippet(request):
     if request.method == 'POST':
         form = forms.AddSnippetForm(request.POST)
         if form.is_valid():
-            new_snippet = Snippet(title=form.cleaned_data['title'],
-                                  description=form.cleaned_data['description'],
-                                  code=form.cleaned_data['code'],
-                                  tag_list=form.cleaned_data['tag_list'],
-                                  language_id=form.cleaned_data['language'],
-                                  author=request.user)
+            new_snippet = form.save(commit=False)
+            new_snippet.author = request.user
             if original_id:
                 new_snippet.original_id = original_id
             new_snippet.save()
@@ -46,7 +43,6 @@ def add_snippet(request):
     return render_to_response('cab/add_snippet_form.html',
                               { 'form': form },
                               context_instance=RequestContext(request))
-add_snippet = login_required(add_snippet)
 
 def download(request, snippet_id):
     """
@@ -66,6 +62,7 @@ def download(request, snippet_id):
     response['Content-Type'] = snippet.language.mime_type
     return response
 
+@login_required
 def edit_snippet(request, snippet_id):
     """
     Allows a user to edit an existing Snippet.
@@ -85,19 +82,16 @@ def edit_snippet(request, snippet_id):
                                 pk=snippet_id,
                                 author__pk=request.user.id)
     if request.method == 'POST':
-        form = forms.EditSnippetForm(request.POST)
+        form = forms.EditSnippetForm(request.POST, instance=snippet)
         if form.is_valid():
-            for field in ['title', 'description', 'code', 'tag_list']:
-                setattr(snippet, field, form.cleaned_data[field])
-            snippet.save()
+            form.save()
             return HttpResponseRedirect(snippet.get_absolute_url())
     else:
-        form = forms.EditSnippetForm(snippet.__dict__)
+        form = forms.EditSnippetForm(instance=snippet)
     return render_to_response('cab/edit_snippet_form.html',
                               { 'form': form,
                                 'original': snippet },
                               context_instance=RequestContext(request))
-edit_snippet = login_required(edit_snippet)
 
 def rate_snippet(request, snippet_id):
     """

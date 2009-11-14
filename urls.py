@@ -75,7 +75,7 @@ urlpatterns += patterns('',
 # Generic views.
 urlpatterns += patterns('',
                         url(r'^$', object_list, snippet_info_dict, name='index'),
-                        url(r'^feeds/(?P<url>.*)/$', feed, feed_dict, name='feed'),
+                        url(r'^feeds/(?P<url>.*)/$', feed, {'feed_dict': feed_dict}, name='feed'),
                         url(r'^languages/$', object_list, language_info_dict, name='languages'),
                         url(r'^tags/$', object_list, tag_info_dict, name='tags'),
                         url(r'^users/$', object_list, user_info_dict, name='users'),

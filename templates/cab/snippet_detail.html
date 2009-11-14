@@ -1,16 +1,17 @@
 {% extends "base.html" %}
+{% load comments %}
 {% block title %}{{ object.title }}{% endblock %}
 
 {% block content_header %}{{ object.title }}{% endblock %}
 
 {% block main_content %}
 {% load snippets %}
-{{ object.highlighted_code }}
+{{ object.highlighted_code|safe }}
 {% endblock %}
 
 {% block sidebar %}
 {% load snippets %}
-{{ object.description_html }}
+{{ object.description_html|safe }}
 
 <dl>
 <dt>Author:</dt>
@@ -62,6 +63,19 @@
 <p><a href="{{ comment.get_absolute_url }}">#</a></p></dd>
 {% endfor %}
 </dl>
-{% comment_form for cab.snippet object.id %}
+    {% get_comment_form for object as comment_form %}
+    <form action="{% comment_form_target %}" method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>{{ comment_form.comment.label_tag }}</td>
+                <td>{{ comment_form.comment }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Post Comment" /></td>
+            </tr>
+        </table>
+    </form>
 </div>
 {% endblock %}

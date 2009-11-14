@@ -30,9 +30,6 @@ class LatestSnippetsFeed(Feed):
     def item_author_name(self, item):
         return item.author.username
     
-    def item_link(self, item):
-        return item.get_absolute_url()
-    
     def item_pubdate(self, item):
         return item.pub_date
 
@@ -67,9 +64,6 @@ class SnippetsByAuthorFeed(Feed):
     def item_author_name(self, item):
         return item.author.username
     
-    def item_link(self, item):
-        return item.get_absolute_url()
-    
     def item_pubdate(self, item):
         return item.pub_date
 
@@ -101,9 +95,6 @@ class SnippetsByLanguageFeed(Feed):
     def item_author_name(self, item):
         return item.author.username
     
-    def item_link(self, item):
-        return item.get_absolute_url()
-    
     def item_pubdate(self, item):
         return item.pub_date
 
@@ -134,9 +125,6 @@ class SnippetsByTagFeed(Feed):
     
     def item_author_name(self, item):
         return item.author.username
-    
-    def item_link(self, item):
-        return item.get_absolute_url()
     
     def item_pubdate(self, item):
         return item.pub_date

@@ -77,10 +77,10 @@ class Tag(models.Model):
     class Meta:
         ordering = ('name',)
     
-    def save(self):
+    def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.name)
-        super(Tag, self).save()
+        super(Tag, self).save(*args, **kwargs)
     
     def get_absolute_url(self):
         return reverse('cab:snippets_by_tag', kwargs={'slug':self.slug})
