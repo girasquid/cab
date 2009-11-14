@@ -47,10 +47,10 @@ class Language(models.Model):
     class Meta:
         ordering = ('name',)
     
-    def save(self):
+    def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.name)
-        super(Language, self).save()
+        super(Language, self).save(*args, **kwargs)
     
     def get_absolute_url(self):
         return reverse('cab:snippets_by_language', kwargs={'slug': self.slug})
@@ -132,7 +132,7 @@ class Snippet(models.Model):
     class Meta:
         ordering = ('-pub_date',)
     
-    def save(self):
+    def save(self, *args, **kwargs):
         if not self.id:
             self.pub_date = datetime.datetime.now()
         self.updated_date = datetime.datetime.now()
@@ -140,7 +140,7 @@ class Snippet(models.Model):
         self.description_html = markdown(self.description, safe_mode=True)
         self.highlighted_code = self.highlight()
         self.tag_list = self.tag_list.lower() # Normalize to lower-case
-        super(Snippet, self).save()
+        super(Snippet, self).save(*args, **kwargs)
         
         # Now that the Snippet is saved, deal with the tags.
         current_tags = list(self.tags.all()) # We only want to query this once.
@@ -189,10 +189,10 @@ class Rating(models.Model):
     
     objects = managers.RatingsManager()
     
-    def save(self):
+    def save(self, *args, **kwargs):
         if not self.id:
             self.date = datetime.datetime.now()
-        super(Rating, self).save()
+        super(Rating, self).save(*args, **kwargs)
     
     def __unicode__(self):
         return "%s rating '%s'" % (self.user.username, self.snippet.title)
@@ -205,17 +205,12 @@ class Bookmark(models.Model):
     """
     snippet = models.ForeignKey(Snippet)
     user = models.ForeignKey(User)
-    date = models.DateTimeField(editable=False)
+    date = models.DateTimeField(editable=False, auto_now_add=True)
     
     objects = managers.BookmarksManager()
     
     class Meta:
         ordering = ('date',)
-    
-    def save(self):
-        if not self.id:
-            self.date = datetime.datetime.now()
-        super(Bookmark, self).save()
     
     def __unicode__(self):
         return "%s bookmarked by %s" % (self.snippet.title, self.user.username)

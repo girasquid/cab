@@ -6,7 +6,6 @@ various custom filters and queries.
 
 from django.db import models
 
-
 class BookmarksManager(models.Manager):
     """
     Custom manager for the Bookmark model.
