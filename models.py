@@ -112,7 +112,7 @@ class Snippet(models.Model):
     
     title = models.CharField(max_length=250)
     language = models.ForeignKey(Language)
-    description = models.TextField(help_text="Accepts Markdown syntax.")
+    description = models.TextField(help_text="Accepts HTML.")
     description_html = models.TextField(editable=False)
     code = models.TextField()
     highlighted_code = models.TextField(editable=False)
@@ -136,8 +136,11 @@ class Snippet(models.Model):
         if not self.id:
             self.pub_date = datetime.datetime.now()
         self.updated_date = datetime.datetime.now()
+        
+        self.description_html = self.sanitize(self.description)
+        
         # Use safe_mode in Markdown to prevent arbitrary tags.
-        self.description_html = markdown(self.description, safe_mode=True)
+        # self.description_html = markdown(self.description, safe_mode=True)
         self.highlighted_code = self.highlight()
         self.tag_list = self.tag_list.lower() # Normalize to lower-case
         super(Snippet, self).save(*args, **kwargs)
@@ -159,6 +162,25 @@ class Snippet(models.Model):
             if tag_name not in [tag.name for tag in current_tags]:
                 tag, created = Tag.objects.get_or_create(name=tag_name)
                 self.tags.add(tag)
+                
+    def sanitize(self, value):
+        from BeauitfulSoup import BeautifulSoup, Comment
+        import re
+        js_regex = re.compile(r'[\s]*(&#x.{1,7})?'.join(list('javascript')))
+        allowed_tags = 'strong em a p br img'.split()
+
+        soup = BeautifulSoup(value)
+        for comment in soup.findAll(text=lambda text: isinstance(text, Comment)):
+            comment.extract()
+
+        for tag in soup.findAll(True):
+            if tag.name not in allowed_tags:
+                tag.hidden = True
+            else:
+                tag.attrs = [(attr, js_regex.sub('', val)) for attr, val in tag.attrs
+                             if attr in allowed_tags[tag.name]]
+
+        return soup.renderContents().decode('utf8')
     
     def __unicode__(self):
         return self.title
