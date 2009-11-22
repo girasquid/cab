@@ -176,9 +176,6 @@ class Snippet(models.Model):
         for tag in soup.findAll(True):
             if tag.name not in allowed_tags:
                 tag.hidden = True
-            else:
-                tag.attrs = [(attr, js_regex.sub('', val)) for attr, val in tag.attrs
-                             if attr in allowed_tags[tag.name]]
 
         return soup.renderContents().decode('utf8')
     
