@@ -164,7 +164,7 @@ class Snippet(models.Model):
                 self.tags.add(tag)
                 
     def sanitize(self, value):
-        from BeauitfulSoup import BeautifulSoup, Comment
+        from BeautifulSoup import BeautifulSoup, Comment
         import re
         js_regex = re.compile(r'[\s]*(&#x.{1,7})?'.join(list('javascript')))
         allowed_tags = 'strong em a p br img'.split()
